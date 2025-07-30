@@ -5,6 +5,10 @@ export const useApi = () => {
 
     const makeRequest = async (endpoint, options = {}) => {
         const token = await getToken()
+        
+        // Use environment variable for API base URL
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
+        
         const defaultOptions = {
             headers: {
                 "Content-Type": "application/json",
@@ -12,7 +16,7 @@ export const useApi = () => {
             }
         }
 
-        const response = await fetch(`http://localhost:8000/api/${endpoint}`, {
+        const response = await fetch(`${baseUrl}/${endpoint}`, {
             ...defaultOptions,
             ...options,
         })
