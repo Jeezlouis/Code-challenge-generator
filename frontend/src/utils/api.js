@@ -6,8 +6,8 @@ export const useApi = () => {
     const makeRequest = async (endpoint, options = {}) => {
         const token = await getToken()
         
-        // Use environment variable for API base URL
-        const baseUrl = import.meta.env.VITE_API_BASE_URL || '/api'
+        // Check for config from Choreo first, fallback to Vite env vars for local dev
+        const baseUrl = window.config?.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || '/api'
         
         const defaultOptions = {
             headers: {
@@ -16,7 +16,12 @@ export const useApi = () => {
             }
         }
 
-        const response = await fetch(`${baseUrl}/${endpoint}`, {
+        // Clean up the URL construction to avoid double slashes
+        const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
+        const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
+        const fullUrl = `${cleanBaseUrl}/${cleanEndpoint}`
+
+        const response = await fetch(fullUrl, {
             ...defaultOptions,
             ...options,
         })
