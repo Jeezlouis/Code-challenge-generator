@@ -7,7 +7,7 @@ export const useApi = () => {
         const token = await getToken()
         
         // Check for config from Choreo first, fallback to Vite env vars for local dev
-        const baseUrl = window.config?.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || '/api'
+        const baseUrl = window.config?.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE_URL || ''
         
         const defaultOptions = {
             headers: {
