@@ -2,8 +2,13 @@ from sqlalchemy import Column, Integer, String, DateTime, create_engine, Foreign
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
-engine = create_engine("sqlite:///database.db", echo=True)
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+engine = create_engine(DATABASE_URL, echo=True)
 base = declarative_base()
 
 class Challenge(base):
