@@ -14,14 +14,16 @@ const ChallengeGenerator = () => {
   useEffect(() => {
     fetchQuota()
   }, [])
+  
   const fetchQuota = async () => {
     try {
       const quotaData = await makeRequest("quota")
       setQuota(quotaData)
     } catch (error) {
-      console.log(err)
+      console.log(error) // Fixed: changed 'err' to 'error'
     }
   }
+  
   const generateChallenge = async () => {
     setIsLoading(true)
     setError(null)
@@ -36,29 +38,31 @@ const ChallengeGenerator = () => {
       setChallenge(challengeData)
       fetchQuota()
     } catch (error) {
-      setError(error.message || "Failed to geneate challenge")
+      setError(error.message || "Failed to generate challenge") // Also fixed typo: "geneate" to "generate"
     } finally {
       setIsLoading(false)
     }
   }
 
   const getNextResetTime = () => {
-    if (!quota.last_reset_data) return null
+    if (!quota?.last_reset_data) return null // Added optional chaining for safety
     const resetDate = new Date(quota.last_reset_data)
-    resetDate.setDate(resetDate.getHours() + 24)
+    resetDate.setHours(resetDate.getHours() + 24) // Fixed: setDate to setHours
     return resetDate
   }
+  
   return (
     <div className='challenge-container'>
       
       <h2>Coding Challenge Generator</h2>
 
-      <div>
+      <div className='quota-display'>
         <p>Challenges remaining today: {quota?.quota_remaining || 0}</p>
         {quota?.quota_remaining === 0 && (
           <p>Next reset: {getNextResetTime()?.toLocaleString()}</p>
         )} 
       </div>
+      
       <div className='difficulty-selector'>
         <label htmlFor='difficulty'>Select Difficulty</label>
         <select 
@@ -75,7 +79,7 @@ const ChallengeGenerator = () => {
 
       <button
         onClick={generateChallenge}
-        disabled={false}
+        disabled={isLoading || quota?.quota_remaining === 0} // Added quota check
         className='generate-button'
       >
         {isLoading ? "Generating..." : "Generate Challenge"}
@@ -83,12 +87,11 @@ const ChallengeGenerator = () => {
 
       {error && (
       <div className='error-message'>
-        <p>{error.toString()}</p> {/* Or use error.message */}
+        <p>{error}</p> {/* Simplified - error is already a string */}
       </div>
       )}
 
-
-        {challenge && <MCQChallenge challenge={challenge} />}
+      {challenge && <MCQChallenge challenge={challenge} />}
     </div>
   )
 }
