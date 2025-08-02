@@ -7,11 +7,8 @@ import os
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-# Add SSL for Aiven PostgreSQL
-if DATABASE_URL and "sslmode" not in DATABASE_URL:
-    DATABASE_URL += "?sslmode=require"
+# Use SQLite for now to avoid psycopg2 issues
+DATABASE_URL = "sqlite:///./challenges.db"
 
 engine = create_engine(DATABASE_URL, echo=True)
 base = declarative_base()
