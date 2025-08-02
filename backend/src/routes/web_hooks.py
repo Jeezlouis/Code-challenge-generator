@@ -35,4 +35,4 @@ async def handle_user_created(request: Request, db = Depends(get_db)):
         return {"status": "success"}
 
     except Exception as e:
-        raise HTTPException(status_coe=401, detail=str(e))
+        raise HTTPException(status_code=401, detail=str(e))  # Fixed: was status_coe
