@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, create_engine, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
@@ -8,6 +8,11 @@ import os
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Add SSL for Aiven PostgreSQL
+if DATABASE_URL and "sslmode" not in DATABASE_URL:
+    DATABASE_URL += "?sslmode=require"
+
 engine = create_engine(DATABASE_URL, echo=True)
 base = declarative_base()
 
@@ -30,8 +35,6 @@ class ChallengeQuota(base):
     user_id = Column(String, nullable=False, unique=True)
     quota_remaining = Column(Integer, nullable=False, default=50)
     last_reset_date = Column(DateTime, default=datetime.now)
-    
-
 
 base.metadata.create_all(engine)
 
