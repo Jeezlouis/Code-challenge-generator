@@ -19,7 +19,10 @@ export const useApi = () => {
         // Clean up the URL construction to avoid double slashes
         const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
         const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl
-        const fullUrl = `${cleanBaseUrl}/${cleanEndpoint}`
+        
+        // Add /api prefix if baseUrl doesn't already include it
+        const apiPath = cleanBaseUrl.includes('/api') ? '' : '/api'
+        const fullUrl = `${cleanBaseUrl}${apiPath}/${cleanEndpoint}`
 
         const response = await fetch(fullUrl, {
             ...defaultOptions,
