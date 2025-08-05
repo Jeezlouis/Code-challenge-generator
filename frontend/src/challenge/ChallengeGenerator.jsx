@@ -38,7 +38,6 @@ const ChallengeGenerator = () => {
       setChallenge(challengeData)
       fetchQuota()
 
-      window.location.reload()
     } catch (error) {
       setError(error.message || "Failed to generate challenge") // Also fixed typo: "geneate" to "generate"
     } finally {
